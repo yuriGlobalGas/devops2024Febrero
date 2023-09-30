@@ -1,7 +1,9 @@
-parameters {
-  string(name: 'V_NODE', defaultValue: '18', description: 'A node version')
-}
+
 node {
+  properties([
+    parameters([
+      booleanParam(name: 'V_NODE', defaultValue: '18',  description: 'A node version')
+  ])
   def gitcommit
   stage('Verificación SCM') {
     withCredentials([usernamePassword(credentialsId: 'erielit-user', passwordVariable:'ERIE_PASS', usernameVariable:'ERIE_USR')]){
