@@ -18,6 +18,7 @@ node {
       ])
     ])
     def nodeVersion = "${params?.V_NODE}";
+    println("NODE: "+nodeVersion)
     def contenedortest = docker.image(nodeVersion)
     contenedortest.pull()
     contenedortest.inside {
@@ -27,25 +28,22 @@ node {
   }
   stage('Docker Build & Push') {
     def promptUser = input(
-      id: 'proceed',
+      id: 'proceed1',
       message: 'Are you sure to continue?',
       ok: 'Yes! I do',
       parameters: [
-        [$class: 'BooleanParameterDefinition', defaultValue: false, description: '', name: 'Please confirm you sure to proceed']
+        [$class: 'BooleanParameterDefinition', defaultValue: false, description: 'Aproval stage', name: 'Please confirm you sure to proceed']
       ]
     )
     println "Prompted ${prompUser}"
-    docker.withRegistry('https://registry.hub.docker.com', 'docker-hub') {
-      def nuestraapp = docker.build("erielit/nodeapp:${gitcommit}", ".")
-      nuestraapp.push()
+    if(promptUser['BooleanParameterDefinition']){
+      docker.withRegistry('https://registry.hub.docker.com', 'docker-hub') {
+        def nuestraapp = docker.build("erielit/nodeapp:${gitcommit}", ".")
+        nuestraapp.push()
+      }
     }
   }
-}
-post {
-  failure {
+  catchError {
     echo "Error deploying"
-  }
-  success {
-    echo "Success build and push"
   }
 }
