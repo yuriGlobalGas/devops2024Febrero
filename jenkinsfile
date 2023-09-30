@@ -11,9 +11,11 @@ node {
     }
   }
   stage('test') {
-    parameters {
-      string(name: "V_NODE", defaultValue: "18", description: "A node version")
-    }
+    properties([
+      parameters {
+        string(name: "V_NODE", defaultValue: "18", description: "A node version")
+      }
+    ])
     print "Params ${params?.V_NODE}"
     print "Params ${V_NODE?:''}"
     def nodeVersion = "18";
