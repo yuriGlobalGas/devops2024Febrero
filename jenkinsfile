@@ -7,7 +7,9 @@ node {
       sh "git rev-parse --short HEAD > .git/commit-id"
       sh 'echo "$ERIE_USR"'
       def gitCode = readFile('.git/commit-id').trim()
+      println "${ERIE_USR}"
       gitcommit = "${ERIE_USR}/${gitCode}"
+      println "${gitcommit}"
     }
   }
   stage('test') {
@@ -28,7 +30,10 @@ node {
     def promptUser = input(
       id: 'proceed',
       message: 'Are you sure to continue?',
-      ok: 'Yes! I do'
+      ok: 'Yes! I do',
+      parameters: [
+        [$class: 'BooleanParameterDefinition', defaultValue: false, description: '', name: 'Please confirm you sure to proceed']
+      ]
     )
     println "Prompted ${prompUser}"
     docker.withRegistry('https://registry.hub.docker.com', 'docker-hub') {
