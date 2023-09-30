@@ -16,9 +16,7 @@ node {
         string(name: "V_NODE", defaultValue: "18", description: "A node version")
       ])
     ])
-    print "Params ${params?.V_NODE}"
-    print "Params ${V_NODE?:''}"
-    def nodeVersion = "18";
+    def nodeVersion = "${params?.V_NODE}";
     def contenedortest = docker.image()
     contenedortest.pull()
     contenedortest.inside {
