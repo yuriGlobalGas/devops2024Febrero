@@ -1,46 +1,44 @@
-pipeline {
-  environment {
-    CREDENTIALS_USER = credentials('erielit-user')
+node {
+  def gitcommit
+  stage('Verificación SCM') {
+    environment {
+      CREDENTIALS_USER = credentials('erielit-user')
+    }
+    checkout scm
+    sh "git rev-parse --short HEAD > .git/commit-id"
+    def gitCode = readFile('.git/commit-id').trim()
+    gitcommit = "${CREDENTIALS_USER_USR}/${gitCode}"
   }
-  parameters {
-    string(name: 'V_NODE', defaultValue: '18', description: 'A version for NodeJS')
+  stage('test') {
+    parameters {
+      string(name: 'V_NODE', defaultValue: '18', description: 'A version for NodeJS')
+    }
+    def nodeVersion = "${params.V_NODE}"?:"19";
+    def contenedortest = docker.image()
+    contenedortest.pull()
+    contenedortest.inside {
+      sh 'npm install --only=dev'
+      sh 'npm test'
+    }
   }
-  stages {
-    def gitcommit
-    stage('Verificación SCM') {
-      checkout scm
-      sh "git rev-parse --short HEAD > .git/commit-id"
-      def gitCode = readFile('.git/commit-id').trim()
-      gitcommit = "${CREDENTIALS_USER_USR}/${gitCode}"
+  stage('Docker Build & Push') {
+    input {
+      message "Are you sure to continue?"
+      ok "Yes! I do"
     }
-    stage('test') {
-      def nodeVersion = "${params.V_NODE}"?:"19";
-      def contenedortest = docker.image()
-      contenedortest.pull()
-      contenedortest.inside {
-        sh 'npm install --only=dev'
-        sh 'npm test'
+    steps {
+      docker.withRegistry('https://registry.hub.docker.com', 'docker-hub') {
+        def nuestraapp = docker.build("erielit/nodeapp:${gitcommit}", ".")
+        nuestraapp.push()
       }
     }
-    stage('Docker Build & Push') {
-      input {
-        message "Are you sure to continue?"
-        ok "Yes! I do"
-      }
-      steps {
-        docker.withRegistry('https://registry.hub.docker.com', 'docker-hub') {
-          def nuestraapp = docker.build("erielit/nodeapp:${gitcommit}", ".")
-          nuestraapp.push()
-        }
-      }
+  }
+  post {
+    failure {
+      echo "Error deploying"
     }
-    post {
-      failure {
-        echo "Error deploying"
-      }
-      success {
-        echo "Success build and push"
-      }
+    success {
+      echo "Success build and push"
     }
   }
 }
