@@ -13,7 +13,8 @@ node {
     }
   }
   stage('test') {
-    def nodeVersion = "$params.V_NODE";
+    print "Params ${this.params}"
+    def nodeVersion = "18";
     def contenedortest = docker.image()
     contenedortest.pull()
     contenedortest.inside {
