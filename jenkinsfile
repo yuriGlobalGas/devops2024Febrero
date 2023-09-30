@@ -1,9 +1,5 @@
 
 node {
-  properties([
-    parameters([
-      booleanParam(name: 'V_NODE', defaultValue: '18',  description: 'A node version')
-  ])
   def gitcommit
   stage('Verificación SCM') {
     withCredentials([usernamePassword(credentialsId: 'erielit-user', passwordVariable:'ERIE_PASS', usernameVariable:'ERIE_USR')]){
@@ -15,7 +11,11 @@ node {
     }
   }
   stage('test') {
-    print "Params ${this.params}"
+    parameters {
+      string(name: "V_NODE", defaultValue: "18", description: "A node version")
+    }
+    print "Params ${params?.V_NODE}"
+    print "Params ${V_NODE?:''}"
     def nodeVersion = "18";
     def contenedortest = docker.image()
     contenedortest.pull()
