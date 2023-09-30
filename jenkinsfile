@@ -19,7 +19,7 @@ node {
     ])
     def nodeVersion = "${params?.V_NODE}";
     println("NODE: "+nodeVersion)
-    def contenedortest = docker.image("${nodeVersion}")
+    def contenedortest = docker.image("${params?.V_NODE}")
     contenedortest.pull()
     contenedortest.inside {
       sh 'npm install --only=dev'
