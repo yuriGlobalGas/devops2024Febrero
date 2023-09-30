@@ -1,18 +1,18 @@
+parameters {
+  string(name: 'V_NODE', defaultValue: '18', description: 'A node version')
+}
 node {
   def gitcommit
   stage('Verificación SCM') {
-    environment {
-      CREDENTIALS_USER = credentials('erielit-user')
+    withCredentials([usernamePassword(credentialsId: 'erielit-user', passwordVariable:'ERIE_PASS', usernameVariable:'ERIE_USR')]){
+      checkout scm
+      sh "git rev-parse --short HEAD > .git/commit-id"
+      def gitCode = readFile('.git/commit-id').trim()
+      gitcommit = "${ERIE_USR}/${gitCode}"
     }
-    checkout scm
-    sh "git rev-parse --short HEAD > .git/commit-id"
-    def gitCode = readFile('.git/commit-id').trim()
-    gitcommit = "${CREDENTIALS_USER_USR}/${gitCode}"
   }
   stage('test') {
-    parameters {
-      string(name: 'V_NODE', defaultValue: '18', description: 'A version for NodeJS')
-    }
+
     def nodeVersion = "${params.V_NODE}"?:"19";
     def contenedortest = docker.image()
     contenedortest.pull()
