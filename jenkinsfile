@@ -25,15 +25,13 @@ node {
     }
   }
   stage('Docker Build & Push') {
-    input {
-      message "Are you sure to continue?"
-      ok "Yes! I do"
-    }
-    steps {
-      docker.withRegistry('https://registry.hub.docker.com', 'docker-hub') {
-        def nuestraapp = docker.build("erielit/nodeapp:${gitcommit}", ".")
-        nuestraapp.push()
-      }
+    input(
+      message: "Are you sure to continue?"
+      ok: "Yes! I do"
+    )
+    docker.withRegistry('https://registry.hub.docker.com', 'docker-hub') {
+      def nuestraapp = docker.build("erielit/nodeapp:${gitcommit}", ".")
+      nuestraapp.push()
     }
   }
   post {
