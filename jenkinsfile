@@ -1,4 +1,3 @@
-
 node {
   def gitcommit
   stage('Verificación SCM') {
@@ -41,12 +40,12 @@ node {
       nuestraapp.push()
     }
   }
-  post {
-    failure {
-      echo "Error deploying"
-    }
-    success {
-      echo "Success build and push"
-    }
+}
+post {
+  failure {
+    echo "Error deploying"
+  }
+  success {
+    echo "Success build and push"
   }
 }
