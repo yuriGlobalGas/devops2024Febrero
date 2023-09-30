@@ -36,7 +36,7 @@ node {
       ]
     )
     println "Prompted ${promptUser}"
-    if(promptUser['BooleanParameterDefinition']){
+    if(promptUser){
       docker.withRegistry('https://registry.hub.docker.com', 'docker-hub') {
         def nuestraapp = docker.build("erielit/nodeapp:${gitcommit}", ".")
         nuestraapp.push()
