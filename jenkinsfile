@@ -26,6 +26,7 @@ node {
   }
   stage('Docker Build & Push') {
     def promptUser = input(
+      id: 'proceed',
       message: 'Are you sure to continue?',
       ok: 'Yes! I do'
     )
