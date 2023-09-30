@@ -7,7 +7,7 @@ node {
       sh 'echo "$ERIE_USR"'
       def gitCode = readFile('.git/commit-id').trim()
       println "${ERIE_USR}"
-      gitcommit = "${ERIE_USR}/${gitCode}"
+      gitcommit = "${ERIE_USR}-${gitCode}"
       println "${gitcommit}"
     }
   }
