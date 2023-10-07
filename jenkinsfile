@@ -6,9 +6,7 @@ node {
       sh "git rev-parse --short HEAD > .git/commit-id"
       sh 'echo "$ERIE_USR"'
       def gitCode = readFile('.git/commit-id').trim()
-      println "${ERIE_USR}"
       gitcommit = "${ERIE_USR}-${gitCode}"
-      println "${gitcommit}"
     }
   }
   stage('test') {
@@ -18,7 +16,6 @@ node {
       ])
     ])
     def nodeVersion = "node:${params?.V_NODE}";
-    println("NODE: "+nodeVersion)
     def contenedortest = docker.image("${nodeVersion}")
     contenedortest.pull()
     contenedortest.inside {
@@ -35,7 +32,6 @@ node {
         [$class: 'BooleanParameterDefinition', defaultValue: false, description: 'Aproval stage', name: 'Please confirm you sure to proceed']
       ]
     )
-    println "Prompted ${promptUser}"
     if(promptUser){
       docker.withRegistry('https://registry.hub.docker.com', 'docker-hub') {
         def nuestraapp = docker.build("erielit/nodeapp:${gitcommit}", ".")
