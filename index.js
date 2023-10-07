@@ -1,9 +1,11 @@
 const express = require('express');
+const os = require('os');
 
 const app = express();
 
 app.get('/', (req, res) => {
-  res.send('Hello World new demo Mikes');
+  const podName = os.hostname();
+  res.send(`Hello World from ${podName}`);
 });
 
 module.exports = app;
