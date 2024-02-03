@@ -1,45 +1,8 @@
 node {
   def gitcommit
   stage('Verificación SCM') {
-    withCredentials([usernamePassword(credentialsId: 'erielit-user', passwordVariable:'ERIE_PASS', usernameVariable:'ERIE_USR')]){
-      checkout scm
-      sh "git rev-parse --short HEAD > .git/commit-id"
-      sh 'echo "$ERIE_USR"'
-      def gitCode = readFile('.git/commit-id').trim()
-      gitcommit = "${ERIE_USR}-${gitCode}"
-    }
-  }
-  stage('test') {
-    properties([
-      parameters([
-        string(name: "V_NODE", defaultValue: "18", description: "A node version")
-      ])
-    ])
-    def nodeVersion = "node:${params?.V_NODE}";
-    def contenedortest = docker.image("${nodeVersion}")
-    contenedortest.pull()
-    contenedortest.inside {
-      sh 'npm install --only=dev'
-      sh 'npm test'
-    }
-  }
-  stage('Docker Build & Push') {
-    def promptUser = input(
-      id: 'proceed1',
-      message: 'Are you sure to continue?',
-      ok: 'Yes! I do',
-      parameters: [
-        [$class: 'BooleanParameterDefinition', defaultValue: false, description: 'Aproval stage', name: 'Please confirm you sure to proceed']
-      ]
-    )
-    if(promptUser){
-      docker.withRegistry('https://registry.hub.docker.com', 'docker-hub') {
-        def nuestraapp = docker.build("erielit/nodeapp:${gitcommit}", ".")
-        nuestraapp.push()
-      }
-    }
-  }
-  catchError {
-    echo "Error deploying"
+   checkout scm
+   sh "git rev-parse --short HEAD > .git/commit-id"                        
+   gitcommit = readFile('.git/commit-id').trim()
   }
 }
