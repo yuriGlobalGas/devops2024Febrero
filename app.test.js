@@ -11,6 +11,6 @@ describe('GET /', () => {
     const podName = os.hostname();
     // Espera que el status sea 200 y el texto sea 'Hello World2'
     expect(res.statusCode).toEqual(200);
-    expect(res.text).toEqual(`Hello World 2`);
+    expect(res.text).toEqual(`Hello World 3`);
   });
 });
