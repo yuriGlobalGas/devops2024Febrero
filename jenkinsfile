@@ -19,7 +19,7 @@ node {
   stage('Docker Build & Push'){
     docker.withRegistry('https://registry.hub.docker.com','docker-hub'){      
       def nuestraapp=docker.build("yuriGlobalGas/devops2024Febrero:$(gitcommit)",".")
-      nuestraapp.push
+      nuestraapp.push()
     }
   }
 }
