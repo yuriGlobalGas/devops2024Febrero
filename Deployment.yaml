@@ -40,9 +40,9 @@ metadata:
 spec: 
   ingressClassName: nginx
   tls: 
-  - host:
-    - app.yuribmvglobal.molcajete.dev
-    secretName: letsencrypt-nginx
+    - host:
+      - app.yuribmvglobal.molcajete.dev
+      secretName: letsencrypt-nginx
   rules:
   - host: app.yuribmvglobal.molcajete.dev
     http:
