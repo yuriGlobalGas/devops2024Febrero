@@ -1,12 +1,14 @@
 node {
   def gitcommit
-  stage('Verificación SCM 2') {
+  def contenedortest=docker.image('node')
+  
+  stage('Verificación SCM') {
    checkout scm
    sh "git rev-parse --short HEAD > .git/commit-id"                        
    gitcommit = readFile('.git/commit-id').trim()
   }
 
-  stage('Test Node js'){
+  stage('Test Node.js'){
     contenedortest.pull()
     contenedortest.inside {
       sh 'npm install --only=dev'
