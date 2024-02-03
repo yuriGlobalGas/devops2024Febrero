@@ -24,7 +24,7 @@ node {
   }
   stage('Update & Deploy'){
    sh "sed -i 's/<IMAGE_TAG>/${gitcommit}/g' Deployment.yaml"
-   sh "cat Deployment.yaml"
+   sh "kubectl apply -f Deployment.yaml"
   }
   
 }
