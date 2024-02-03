@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: knodeapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: knodeapp
+  template:
+    metadata:
+      labels:
+        app: knodeapp
+    spec:
+      containers:
+        - name: knodeapp
+          image: armandogl/eneroappnodes:<IMAGE_TAG>
+          ports:
+            - containerPort: 3000
