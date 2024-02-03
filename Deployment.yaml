@@ -40,7 +40,8 @@ spec:
   rules:
   - host: app.yuribmvglobal.molcajete.dev
     http:
-      - paths: /
+      paths: 
+      - path: /
         pathType: Prefix
         backend: 
           service:
