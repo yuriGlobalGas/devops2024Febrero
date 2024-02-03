@@ -17,3 +17,15 @@ spec:
           image: yurivargasbmv/devopscursonode:<IMAGE_TAG>
           ports:
             - containerPort: 3000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name:knodeapp-service
+spec:
+  type: ClusterIP
+  ports:
+    - port: 3000
+      targetPort:3000
+  selector:
+    app: knodeapp
